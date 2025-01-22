@@ -2,6 +2,9 @@ name: SQL for GitHub Actions
 
 on:
   workflow_dispatch
+permissions:
+      id-token: write
+      contents: read
 
 jobs:
   build:
