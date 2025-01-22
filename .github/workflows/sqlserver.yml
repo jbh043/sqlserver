@@ -1,0 +1,37 @@
+name: SQL for GitHub Actions
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: microsoft/setup-msbuild@v1.3.1
+      - name: Build DACPAC
+        run: msbuild 'YourDatabaseProject.sqlproj' /p:Configuration=Release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: SQLDB
+          path: ${{ github.workspace }}/bin/Release/
+
+  deploy:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: SQLDB
+      - uses: azure/sql-action@v2
+        with:
+          connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+          path: './YourDatabase.dacpac'
+          action: 'Publish'
+      - name: Logout from Azure
+        run: az logout
