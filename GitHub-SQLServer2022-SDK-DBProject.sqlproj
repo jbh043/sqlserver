@@ -7,5 +7,6 @@
     <ModelCollation>1033, CI</ModelCollation>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <ProjectGuid>{b4630d7f-cddf-4cff-bde3-67cb3c1275dc}</ProjectGuid>
+    <TargetPlatform>SqlAzure</TargetPlatform>
   </PropertyGroup>
 </Project>
